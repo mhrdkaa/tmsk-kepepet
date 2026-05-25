@@ -64,6 +64,7 @@
     "@cloudflare/workers-types": "^4.20260517.1",
     "@fontsource-variable/dm-sans": "^5.2.8",
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
+    "@rolldown/plugin-babel": "^0.2.3",
     "@tailwindcss/typography": "^0.5.19",
     "@tanstack/devtools-vite": "^0.7.0",
     "@testing-library/dom": "^10.4.1",
