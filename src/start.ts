@@ -5,7 +5,7 @@ export const startInstance = createStart(() => {
   return {
     requestMiddleware: [
       clerkMiddleware({
-        authorizedParties: ["https://tasky.maelho.workers.dev"],
+        authorizedParties: ["https://tmsk-kepepet.utakuliah.workers.dev"],
       }),
     ],
   }
