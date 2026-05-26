@@ -17,7 +17,7 @@ export function AuthModal() {
       <DialogTrigger render={<Button />}>Start now</DialogTrigger>
       <DialogPopup className="sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>Sign in to Tasky</DialogTitle>
+          <DialogTitle>Sign in to TMSK</DialogTitle>
           <DialogDescription>Welcome back! Please sign in to continue</DialogDescription>
         </DialogHeader>
         <DialogPanel>

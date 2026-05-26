@@ -1,7 +1,7 @@
 {
-  "name": "Tasky - Project Management Made Simple",
-  "short_name": "Tasky",
-  "description": "Project Management using Next.js 14, Bun, Clerk Authentication and User Management, Drizzle with libSQL, Turso, Tailwind CSS, and shadcn",
+  "name": "TMSK - Task Management System",
+  "short_name": "TMSK",
+  "description": "TASK MANAGEMENT SYSTEM KANTOR using Next.js 14, Bun, Clerk Authentication and User Management, Drizzle with libSQL, Turso, Tailwind CSS, and shadcn",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
@@ -59,7 +59,7 @@
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Tasky Mobile Interface"
+      "label": "TMSK Mobile Interface"
     }
   ],
   "shortcuts": [
