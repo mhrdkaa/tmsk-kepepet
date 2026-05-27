@@ -1,6 +1,6 @@
 import { useClerk, useSignIn, useSignUp } from "@clerk/tanstack-react-start"
 import { createFileRoute, useRouter } from "@tanstack/react-router"
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef } from "react"
 
 export const Route = createFileRoute("/sso-callback")({
   component: SSOCallbackPage,
@@ -13,37 +13,35 @@ function SSOCallbackPage() {
   const router = useRouter()
   const hasRun = useRef(false)
 
-  const navigateToSignIn = () => router.navigate({ to: "/" })
+  const navigateToSignIn = useCallback(() => router.navigate({ to: "/" }), [router])
 
-  const finalizeSignIn = async () => {
+  const navigateWithDecorateUrl = useCallback(
+    async ({ decorateUrl }: { session: unknown; decorateUrl: (url: string) => string }) => {
+      const url = decorateUrl("/")
+      if (url.startsWith("http")) {
+        window.location.href = url
+      } else {
+        void router.navigate({ to: url })
+      }
+    },
+    [router],
+  )
+
+  const finalizeSignIn = useCallback(async () => {
     await signIn.finalize({
-      navigate: async ({ session, decorateUrl }) => {
-        console.log(session)
-
-        const url = decorateUrl("/")
-        if (url.startsWith("http")) {
-          window.location.href = url
-        } else {
-          void router.navigate({ to: url })
-        }
+      navigate: async (args) => {
+        await navigateWithDecorateUrl(args)
       },
     })
-  }
+  }, [signIn, navigateWithDecorateUrl])
 
-  const finalizeSignUp = async () => {
+  const finalizeSignUp = useCallback(async () => {
     await signUp.finalize({
-      navigate: async ({ session, decorateUrl }) => {
-        console.log(session)
-
-        const url = decorateUrl("/")
-        if (url.startsWith("http")) {
-          window.location.href = url
-        } else {
-          void router.navigate({ to: url })
-        }
+      navigate: async (args) => {
+        await navigateWithDecorateUrl(args)
       },
     })
-  }
+  }, [signUp, navigateWithDecorateUrl])
 
   useEffect(() => {
     void (async () => {
@@ -55,12 +53,23 @@ function SSOCallbackPage() {
         return
       }
 
+      // Handle new Client Trust status (Clerk update): user is signing in from a
+      // new/untrusted client and needs to be challenged for a second factor.
+      // Redirect back to sign-in so the user can complete the challenge.
+      if ((signIn.status as string) === "needs_client_trust") {
+        return navigateToSignIn()
+      }
+
       if (signUp.isTransferable) {
         await signIn.create({ transfer: true })
         const status = signIn.status as typeof signIn.status | "complete"
         if (status === "complete") {
           await finalizeSignIn()
           return
+        }
+        // Also handle needs_client_trust after transfer
+        if ((status as string) === "needs_client_trust") {
+          return navigateToSignIn()
         }
         return navigateToSignIn()
       }
@@ -85,21 +94,23 @@ function SSOCallbackPage() {
       if (existingSessionId) {
         await clerk.setActive({
           session: existingSessionId,
-          navigate: async ({ session, decorateUrl }) => {
-            console.log(session)
-
-            const url = decorateUrl("/")
-            if (url.startsWith("http")) {
-              window.location.href = url
-            } else {
-              void router.navigate({ to: url })
-            }
+          navigate: async (args) => {
+            await navigateWithDecorateUrl(args)
           },
         })
         return
       }
     })()
-  }, [clerk.loaded, signIn, signUp])
+  }, [
+    clerk,
+    signIn,
+    signUp,
+    finalizeSignIn,
+    finalizeSignUp,
+    navigateToSignIn,
+    navigateWithDecorateUrl,
+    router,
+  ])
 
   return (
     <div id="clerk-captcha">
