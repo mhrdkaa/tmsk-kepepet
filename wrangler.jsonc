@@ -1,17 +1,20 @@
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "tmsk",
-	"compatibility_date": "2025-09-02",
-	"compatibility_flags": [
-		"nodejs_compat"
-	],
-	"main": "@tanstack/react-start/server-entry",
-	"d1_databases": [
-		{
-			"binding": "DB",
-			"database_name": "tmsk",
-			"database_id": "ef7188df-b4dd-43a6-988d-2e62c7c179dd",
-			"migrations_dir": "drizzle"
-		}
-	]
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tmsk",
+  "compatibility_date": "2025-09-02",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "@tanstack/react-start/server-entry",
+  "vars": {
+    "VITE_CLERK_PUBLISHABLE_KEY": "pk_test_cXVpY2stc2hlZXBkb2ctNi5jbGVyay5hY2NvdW50cy5kZXYk",
+    "CLOUDFLARE_ACCOUNT_ID": "6555cd6f9f627cdd704f19f5057e421b",
+    "CLOUDFLARE_DATABASE_ID": "ef7188df-b4dd-43a6-988d-2e62c7c179dd",
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tmsk",
+      "database_id": "ef7188df-b4dd-43a6-988d-2e62c7c179dd",
+      "migrations_dir": "drizzle",
+    },
+  ],
 }
